@@ -1,36 +1,93 @@
 @import "tailwindcss";
 
-:root {
-  --background: #F7F9FA;
-  --foreground: #1C2B39;
+/* ─── Design Tokens ─────────────────────────────────────────────────────────
+   @theme inline inlines hex values at build-time into Tailwind utilities.
 
-  --color-navy: #1C2B39;
-  --color-paper: #F7F9FA;
-  --color-teal: #2F8F8B;
-  --color-slate: #5C6B73;
-  --color-line: #E1E6E8;
+   IMPORTANT: Always use text-paper (NOT text-white) for white text on dark
+   backgrounds. text-white maps to --color-white which is undefined here and
+   inherits the body's navy foreground, making it invisible.
+────────────────────────────────────────────────────────────────────────────── */
+@theme inline {
+  /* Brand palette */
+  --color-navy:        #0F2540;   /* deep trust blue — headings, dark text     */
+  --color-paper:       #FFFFFF;   /* white — text / bg on dark surfaces        */
+  --color-sky:         #0EA5E9;   /* sky-500 — accents, highlights             */
+  --color-cyan:        #0284C7;   /* sky-600 — primary action colour           */
+  --color-teal:        #0284C7;   /* alias for cyan (backward compat)          */
+  --color-slate:       #4E6478;   /* body copy, secondary UI                   */
+  --color-line:        #D7E4F2;   /* borders, dividers                         */
+  --color-muted:       #7C9BB5;   /* de-emphasised text                        */
+  --color-background:  #F8FAFB;   /* page background                           */
+  --color-foreground:  #0F2540;   /* default body text                         */
+
+  /* Typefaces — resolved at runtime via Next.js Google Fonts variables */
+  --font-display: var(--font-source-serif);
+  --font-sans:    var(--font-inter);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+/* Runtime CSS custom properties (not emitted by @theme inline) */
+:root {
+  --background: #F8FAFB;
+  --foreground: #0F2540;
+}
 
-  --color-navy: var(--color-navy);
-  --color-paper: var(--color-paper);
-  --color-teal: var(--color-teal);
-  --color-slate: var(--color-slate);
-  --color-line: var(--color-line);
+/* ─── Reset & Base ─────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
 
-  --font-display: var(--font-source-serif);
-  --font-sans: var(--font-inter);
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
+  margin: 0;
+  min-height: 100dvh;
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 1rem;
+  line-height: 1.65;
 }
 
-.text-balance {
-  text-wrap: balance;
+/* ─── Touch Optimisation (WCAG / Apple HIG) ─────────────────────────────────
+   Eliminates 300 ms tap delay on mobile for links, buttons, and form controls */
+a,
+button,
+[role="button"],
+select,
+input[type="checkbox"],
+input[type="radio"] {
+  touch-action: manipulation;
+}
+
+/* Consistent, short-duration transitions on interactive elements */
+a,
+button {
+  transition:
+    color            0.15s ease-out,
+    background-color 0.15s ease-out,
+    border-color     0.15s ease-out,
+    box-shadow       0.15s ease-out,
+    transform        0.15s ease-out,
+    opacity          0.15s ease-out;
+}
+
+.text-balance { text-wrap: balance; }
+
+::selection { background: rgba(14, 165, 233, 0.18); }
+
+/* ─── Scrollbar ────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar         { width: 6px; }
+::-webkit-scrollbar-track   { background: #f1f5f9; }
+::-webkit-scrollbar-thumb   { background: #94a3b8; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+/* ─── Focus Ring (WCAG 2.1 AA — 2 px, 3 px offset) ───────────────────────── */
+*:focus-visible {
+  outline: 2px solid #0284C7;
+  outline-offset: 3px;
+  border-radius: 4px;
 }
